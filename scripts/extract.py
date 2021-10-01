@@ -1,7 +1,8 @@
 import requests
 import os
 
-
+#store this as config at some point
+path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def _extract():
     try:
@@ -10,8 +11,7 @@ def _extract():
         print("err")
     except requests.exceptions.RequestException:
         print("err") 
-    print(v_data.content)
-    with open('v_data.csv', 'wb') as f:
+    with open(path+'/staging/v-data_raw.csv', 'wb') as f:
         f.write(v_data.content)
 
 
