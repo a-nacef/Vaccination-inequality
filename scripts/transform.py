@@ -22,6 +22,7 @@ def _transform():
     prn_df = df[['location', 'date', 'total_vaccinations', 'people_vaccinated', 'daily_vaccinations_per_million']]
     final_df = prn_df.pivot_table(values, index=['location','date']).loc[Countries]
     final_df.fillna(0, inplace=True)
+    #if exists
     final_df.to_csv(path+'/staging/v-data_transformed.csv')
     
 
