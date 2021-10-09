@@ -4,4 +4,5 @@ scripts/__init__.py
 scripts/__pycache__
 scripts/__init__.py
 gdp-per-capita-worldbank.csv
+.git*
 
