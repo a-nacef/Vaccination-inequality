@@ -24,7 +24,7 @@ def _transform():
     final_df = prn_df.pivot_table(values, index=['location','date']).loc[Countries]
     final_df.fillna(0, inplace=True)
     final_df.to_csv(path+'/staging/v-data_transformed.csv')
-    gdpdf = pd.merge(final_df.reset_index()['location'], df2[df2['Year']>=2019], how='inner', left_on = 'location', right_on = 'Entity').drop(columns=['Entity']).drop_duplicates().reset_index(drop=True)
+    gdpdf = pd.merge(final_df.reset_index()['location'], df2[df2['Year']>=2019], how='inner', left_on = 'location', right_on = 'Entity').drop(columns=['Entity','Code']).drop_duplicates().reset_index(drop=True)
     gdpdf.to_csv(path+'/staging/gdp-data.csv',index=False)
     
     
