@@ -4,11 +4,12 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
-#put this path in config too stupid whorebitchdie
-sys.path.append('/home/aziz/airflow/dags/vax-dbrd/scripts')
-import extract
-import transform
-import load
+import os
+
+import scripts
+
+sys.path.append((os.path.dirname(os.path.abspath(__file__)))+'/scripts')
+from scripts import extract, load, transform
 
 my_dag = DAG(
     dag_id= 'vaccination-data-ETL',
@@ -36,4 +37,5 @@ Load_data = PythonOperator(
     dag = my_dag
 )
 
-Extract_data >> Transform_data >> Load_data
+print(dir(scripts))
+#Extract_data >> Transform_data >> Load_data
