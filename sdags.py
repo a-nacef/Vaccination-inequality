@@ -4,12 +4,9 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
+sys.path.append('/home/aziz/airflow/dags/vax-dbrd')
 import os
-
-import scripts
-
-sys.path.append((os.path.dirname(os.path.abspath(__file__)))+'/scripts')
-from scripts import extract, load, transform
+import etlscripts
 
 my_dag = DAG(
     dag_id= 'vaccination-data-ETL',
@@ -18,24 +15,23 @@ my_dag = DAG(
 )
 
 
-
 Extract_data = PythonOperator(
     task_id = 'Extract_Github-OWID-vaccinations',
-    python_callable= extract._extract,
+    python_callable= etlscripts._extract,
     dag = my_dag
 )
 
 Transform_data = PythonOperator(
     task_id = 'Clean_aggregate_csv',
-    python_callable= transform._transform,
+    python_callable= etlscripts._transform,
     dag = my_dag
 )
 
 Load_data = PythonOperator(
     task_id = 'Load_Postgres',
-    python_callable = load._load,
+    python_callable = etlscripts._load,
     dag = my_dag
 )
 
-print(dir(scripts))
-#Extract_data >> Transform_data >> Load_data
+#print(dir(etlscripts))
+Extract_data >> Transform_data >> Load_data

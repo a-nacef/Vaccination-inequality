@@ -25,24 +25,24 @@ def _extract():
         print("err")
     except requests.exceptions.RequestException:
         print("err") 
-    with open(path+'/staging/v-data_raw.csv', 'wb') as f:
+    with open(path+'/vax-dbrd/staging/v-data_raw.csv', 'wb') as f:
         f.write(v_data.content)
 
 def _transform():
-    df = pd.read_csv(path+'/staging/v-data_raw.csv')
+    df = pd.read_csv(path+'/vax-dbrd/staging/v-data_raw.csv')
     prn_df = df[['location', 'date', 'total_vaccinations', 'people_vaccinated', 'daily_vaccinations_per_million']]
     final_df = prn_df.pivot_table(values, index=['location','date']).loc[Countries]
     final_df.fillna(0, inplace=True)
-    final_df.to_csv(path+'/staging/v-data_transformed.csv')
+    final_df.to_csv(path+'/vax-dbrd/staging/v-data_transformed.csv')
 
 def _load():
     conn = psycopg2.connect("user='postgres' dbname='vaccination_inequality_proj'")
     curr = conn.cursor()
-    print(os.environ['VPATH']+'staging/v-data_transformed.csv')
+    print(os.environ['VPATH']+'/vax-dbrd/staging/v-data_transformed.csv')
     try:
         curr.execute("""DELETE FROM dimvax_staging WHERE location is not null """)
         curr.execute(f"""COPY dimvax_staging(location, day, daily_per_mil, daily_total, total)
-                        FROM '{os.environ['VPATH']+'staging/v-data_transformed.csv'}'
+                        FROM '{os.environ['VPATH']+'/vax-dbrd/staging/v-data_transformed.csv'}'
                         DELIMITER ','
                         CSV HEADER; 
                         """)
