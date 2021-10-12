@@ -33,5 +33,4 @@ Load_data = PythonOperator(
     dag = my_dag
 )
 
-#print(dir(etlscripts))
 Extract_data >> Transform_data >> Load_data
